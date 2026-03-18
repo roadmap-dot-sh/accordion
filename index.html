@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Accordion — Single-open FAQ (HTML/CSS/JS)</title>
+    <style>
+      :root {
+        --bg: #fff;
+        --card-border: #222;
+        --muted: #6f757a;
+        --accent: #000;
+        --panel-bg: #fff;
+        --radius: 12px;
+        --gap: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+        background: linear-gradient(180deg, #fff 0%, #fbfbfb 100%);
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: 980px;
+        border: 2px solid var(--card-border);
+        border-radius: 18px;
+        padding: 36px;
+        background: var(--bg);
+      }
+
+      h1 {
+        margin: 0 0 8px 0;
+        font-size: 32px;
+      }
+
+      p.lead {
+        margin: 0 0 22px 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      /* Accordion container */
+      .accordion {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      /* Each item */
+      .accordion-item {
+        width: 100%;
+      }
+
+      /* The button that shows the question */
+      .accordion-header {
+        width: 100%;
+        background: #050505; /* dark pill in mockup */
+        color: #fff;
+        border-radius: 12px;
+        border: 2px solid rgba(0, 0, 0, 0.8);
+        padding: 18px 20px;
+        font-size: 18px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+
+      .accordion-header:hover,
+      .accordion-header:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+        outline: none;
+      }
+
+      /* Icon on right */
+      .accordion-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: inline-grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+        transform-origin: center;
+        transition: transform 0.22s ease;
+        user-select: none;
+        flex: 0 0 28px;
+      }
+
+      /* Panel (answer) */
+      .accordion-panel {
+        overflow: hidden;
+        border-radius: 12px;
+        border: 2px solid var(--card-border);
+        background: var(--panel-bg);
+        padding: 0 18px; /* pad horizontally; vertical padding handled in inner content */
+        max-height: 0;
+        transition:
+          max-height 0.32s cubic-bezier(0.2, 0.9, 0.2, 1),
+          padding 0.28s linear;
+      }
+
+      /* Inner content spacing */
+      .accordion-panel .panel-body {
+        padding: 18px 4px;
+        color: var(--accent);
+        line-height: 1.6;
+        font-size: 16px;
+      }
+
+      /* Open state */
+      .accordion-item[aria-expanded="true"] .accordion-header {
+        /* keep header dark as in mockup; optionally change */
+        box-shadow: none;
+      }
+
+      .accordion-item[aria-expanded="true"] .accordion-icon {
+        transform: rotate(180deg);
+      }
+
+      .accordion-item[aria-expanded="true"] .accordion-panel {
+        padding: 12px 18px;
+      }
+
+      /* The visible panel uses a large max-height so transitions work with dynamic content.
+     We set a high value and rely on overflow:hidden so it works for typical content sizes. */
+      .accordion-item[aria-expanded="true"] .accordion-panel {
+        max-height: 480px; /* adjust if you expect taller content */
+      }
+
+      /* Small screens */
+      @media (max-width: 640px) {
+        .wrap {
+          padding: 20px;
+        }
+        h1 {
+          font-size: 26px;
+        }
+        .accordion-header {
+          font-size: 16px;
+          padding: 14px 16px;
+        }
+        .accordion-panel .panel-body {
+          font-size: 15px;
+          padding: 12px 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap" role="main" aria-labelledby="faq-heading">
+      <h1 id="faq-heading">Frequently Asked Questions</h1>
+      <p class="lead">Here are some of the frequently asked questions</p>
+
+      <div class="accordion" id="accordion" role="presentation">
+        <!-- Item 1 (open by default) -->
+        <div class="accordion-item" id="item-1" aria-expanded="true">
+          <button
+            class="accordion-header"
+            aria-controls="panel-1"
+            aria-expanded="true"
+            id="header-1">
+            <span>What is roadmap.sh?</span>
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-1"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-1">
+            <div class="panel-body">
+              roadmap.sh is a community effort to create learning paths, guides,
+              project ideas and other similar content to help developers grow in
+              their careers.
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="accordion-item" id="item-2" aria-expanded="false">
+          <button
+            class="accordion-header"
+            aria-controls="panel-2"
+            aria-expanded="false"
+            id="header-2">
+            <span>What are the plans for roadmap.sh?</span>
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-2"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-2"
+            hidden>
+            <div class="panel-body">
+              The plans include expanding the number of roadmaps, improving
+              community tools, and adding more guided projects and tutorials
+              contributed by the community.
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="accordion-item" id="item-3" aria-expanded="false">
+          <button
+            class="accordion-header"
+            aria-controls="panel-3"
+            aria-expanded="false"
+            id="header-3">
+            <span>How is roadmap.sh built?</span>
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-3"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-3"
+            hidden>
+            <div class="panel-body">
+              roadmap.sh is built by contributors using modern web technologies
+              and static site generation, with content maintained in the open on
+              GitHub.
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="accordion-item" id="item-4" aria-expanded="false">
+          <button
+            class="accordion-header"
+            aria-controls="panel-4"
+            aria-expanded="false"
+            id="header-4">
+            <span>Can I use roadmap.sh in my team?</span>
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-4"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-4"
+            hidden>
+            <div class="panel-body">
+              Absolutely — roadmap content is open for teams to use and adapt.
+              Check the license and contribution guidelines on the project
+              repository.
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="accordion-item" id="item-5" aria-expanded="false">
+          <button
+            class="accordion-header"
+            aria-controls="panel-5"
+            aria-expanded="false"
+            id="header-5">
+            <span>How can I create custom roadmaps?</span>
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-5"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-5"
+            hidden>
+            <div class="panel-body">
+              You can fork the repository, create your own markdown content, and
+              publish a custom roadmap for your team or community.
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="accordion-item" id="item-6" aria-expanded="false">
+          <button
+            class="accordion-header"
+            aria-controls="panel-6"
+            aria-expanded="false"
+            id="header-6">
+            <span
+              >Is roadmap.sh really 7th most starred project on GitHub?</span
+            >
+            <span class="accordion-icon" aria-hidden="true">▾</span>
+          </button>
+          <div
+            id="panel-6"
+            class="accordion-panel"
+            role="region"
+            aria-labelledby="header-6"
+            hidden>
+            <div class="panel-body">
+              Project rankings change over time. At one point it was among the
+              top-starred repositories, but check live GitHub stats for the
+              current ranking.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        const accordion = document.getElementById("accordion");
+        const items = Array.from(accordion.querySelectorAll(".accordion-item"));
+
+        // Helper to collapse an item
+        function collapseItem(item) {
+          const header = item.querySelector(".accordion-header");
+          const panel = item.querySelector(".accordion-panel");
+
+          item.setAttribute("aria-expanded", "false");
+          header.setAttribute("aria-expanded", "false");
+          // hide panel visually and for assistive tech
+          panel.setAttribute("hidden", "");
+          // reset max-height to collapse transition (in case it was set)
+          panel.style.maxHeight = null;
+        }
+
+        // Helper to expand an item
+        function expandItem(item) {
+          const header = item.querySelector(".accordion-header");
+          const panel = item.querySelector(".accordion-panel");
+
+          // close others first (single-open behavior)
+          items.forEach((i) => {
+            if (i !== item) collapseItem(i);
+          });
+
+          item.setAttribute("aria-expanded", "true");
+          header.setAttribute("aria-expanded", "true");
+          // remove hidden for screen readers
+          panel.removeAttribute("hidden");
+
+          // For smooth height animation: set maxHeight to scrollHeight
+          // Delay a tick to ensure CSS transition from 0 to value
+          requestAnimationFrame(() => {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          });
+        }
+
+        // Initialize: ensure correct panels are visible according to aria-expanded in HTML
+        items.forEach((item) => {
+          const expanded = item.getAttribute("aria-expanded") === "true";
+          const header = item.querySelector(".accordion-header");
+          const panel = item.querySelector(".accordion-panel");
+
+          // set header aria-expanded based on item
+          header.setAttribute("aria-expanded", expanded ? "true" : "false");
+
+          if (expanded) {
+            panel.removeAttribute("hidden");
+            // set explicit maxHeight so the panel shows (no animation on load)
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          } else {
+            panel.setAttribute("hidden", "");
+            panel.style.maxHeight = null;
+          }
+
+          // click handler
+          header.addEventListener("click", (e) => {
+            const isExpanded = item.getAttribute("aria-expanded") === "true";
+            if (isExpanded) {
+              // collapse if clicked when open
+              collapseItem(item);
+            } else {
+              expandItem(item);
+            }
+          });
+
+          // keyboard support for header (Enter/Space toggle, Up/Down move focus)
+          header.addEventListener("keydown", (e) => {
+            const currentIndex = items.indexOf(item);
+            let newIndex = null;
+
+            switch (e.key) {
+              case "ArrowDown":
+              case "Down":
+                newIndex = (currentIndex + 1) % items.length;
+                e.preventDefault();
+                break;
+              case "ArrowUp":
+              case "Up":
+                newIndex = (currentIndex - 1 + items.length) % items.length;
+                e.preventDefault();
+                break;
+              case "Home":
+                newIndex = 0;
+                e.preventDefault();
+                break;
+              case "End":
+                newIndex = items.length - 1;
+                e.preventDefault();
+                break;
+              case "Enter":
+              case " ":
+                // toggle
+                const expandedNow =
+                  item.getAttribute("aria-expanded") === "true";
+                if (expandedNow) collapseItem(item);
+                else expandItem(item);
+                e.preventDefault();
+                break;
+            }
+
+            if (newIndex !== null) {
+              const targetHeader =
+                items[newIndex].querySelector(".accordion-header");
+              targetHeader.focus();
+            }
+          });
+        });
+
+        // Optional: close all when clicking outside (uncomment if desired)
+        // document.addEventListener('click', (e) => {
+        //   if (!accordion.contains(e.target)) items.forEach(collapseItem);
+        // });
+
+        // Make sure panels shrink after transition ends so max-height doesn't lock to a large value
+        accordion.addEventListener(
+          "transitionend",
+          (e) => {
+            if (
+              !e.target.classList ||
+              !e.target.classList.contains("accordion-panel")
+            )
+              return;
+            const panel = e.target;
+            const item = panel.closest(".accordion-item");
+            if (item.getAttribute("aria-expanded") === "false") {
+              // ensure collapsed panels have no lingering max-height
+              panel.style.maxHeight = null;
+            } else {
+              // keep expanded panels with auto height (optional)
+              // To allow dynamic content growth you could set maxHeight back to 'none' after a moment.
+              // Here, we leave the explicit maxHeight so animation works consistently.
+            }
+          },
+          true,
+        );
+      })();
+    </script>
+  </body>
+</html>
